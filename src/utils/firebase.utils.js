@@ -12,11 +12,23 @@ const config = {
     appId: "1:612271992108:web:04dc6337c627d88ccad089",
     measurementId: "G-G8WZR457DV",
 };
+// initialize firebase
+firebase.initializeApp(config);
+
 // get userAuth after authentication then store it to our database
 export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
     const userRef = firestore.doc(`users/${userAuth.uid}`);
+    const collectionRef = firestore.collection(`users`);
+    console.log("Documentsnapshot object:", userRef);
     const snapShot = await userRef.get();
+    const collectionSnapshot = await collectionRef.get();
+    console.log("Documentsnapshot object:Exists", snapShot);
+    console.log("Querysnapshot object:Exists", collectionSnapshot);
+    console.log("Querysnapshot Document", collectionSnapshot.docs);
+    console.log({
+        Document: collectionSnapshot.docs.map((doc) => doc.data()),
+    });
     if (!snapShot.exists) {
         const { displayName, email } = userAuth;
         const craetedAt = new Date();
@@ -28,14 +40,22 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
                 ...additionalData,
             });
         } catch (error) {
-            console.log("Vreate user error");
+            console.log("Create user error");
         }
     }
-    console.log(snapShot);
     return userRef;
 };
-// initialize firebase
-firebase.initializeApp(config);
+
+// create a collection
+export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+    const batch = firestore.batch();
+    objectToAdd.forEach((obj) => {
+        const newDocuRef = collectionRef.doc();
+        batch.set(newDocuRef, obj);
+    });
+    return await batch.commit();
+};
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
