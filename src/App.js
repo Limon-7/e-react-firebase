@@ -6,12 +6,7 @@ import { createStructuredSelector } from "reselect";
 import { SelectCurrentUser } from "./redux/user/user.selector";
 
 import { setCurrentUser } from "./redux/user/user-action";
-import { selectCollectionsForOverview } from "./redux/shop/shop.selectors";
-import {
-    auth,
-    createUserProfileDocument,
-    addCollectionAndDocuments,
-} from "./utils/firebase.utils";
+import { auth, createUserProfileDocument } from "./utils/firebase.utils";
 
 import "./App.css";
 
@@ -24,7 +19,7 @@ import Checkout from "./pages/checkout/checkout";
 class App extends Component {
     unsubscribeFromAuth = null;
     componentDidMount() {
-        const { setCurrentUser, collectionArray } = this.props;
+        const { setCurrentUser } = this.props;
         // this an open subscription method. so we need not unsubscribe after component is closed.
         // onAuthStateChange()= adds an observer for changes to the user sign in state
         this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
@@ -39,10 +34,10 @@ class App extends Component {
                 });
             }
             setCurrentUser(userAuth);
-            addCollectionAndDocuments(
-                "collections",
-                collectionArray.map(({ title, items }) => ({ title, items }))
-            );
+            // addCollectionAndDocuments(
+            //     "collections",
+            //     collectionArray.map(({ title, items }) => ({ title, items }))
+            // );
         });
     }
     componentWillUnmount() {
@@ -73,7 +68,8 @@ class App extends Component {
 }
 const mapStateToProps = createStructuredSelector({
     currentUser: SelectCurrentUser,
-    collectionArray: selectCollectionsForOverview,
+    // update collections to firabase
+    // collectionArray: selectCollectionsForOverview,
 });
 
 const mapDispatchToProps = (dispatch) => ({

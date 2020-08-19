@@ -8,8 +8,6 @@ import CollectionItem from "../collection-item/collection-item";
 import "./collection.style.scss";
 
 const Collection = ({ collections, match }) => {
-    console.log(collections);
-    console.log("Get Match Props:", match);
     const { title, items } = collections;
     return (
         <div className="collection">
