@@ -7,7 +7,7 @@ import CollectionItem from "../collection-item/collection-item";
 
 import "./collection.style.scss";
 
-const Collection = ({ collections, match }) => {
+const Collection = ({ collections }) => {
     const { title, items } = collections;
     return (
         <div className="collection">
